@@ -1,0 +1,50 @@
+#
+# Menuet32 kernel setup
+#
+# This file lists the video, mouse and RAM setup that the kernel will use.
+# Blank lines, or lines beginning with # are ignored - they are comments.
+# The format for each line is: [KERNEL PARAMETER] value
+# The allowable values for 'KERNEL PARAMETER' and corresponding 'value' are
+# defined below. The file may be Unix or DOS format; <cr>s are ignored.
+# A value of 0 => ask the user
+
+# Select the video mode to use: there are 3 basic groups.
+# Specify a value within the appropriate group.
+# Vesa 2.0+ 16 M LFB:  {1} 640x480, {2} 800x600, {3} 1024x768, {4} 1280x1024
+# Vesa 1.2  16 M Bnk:  {5} 640x480, {6} 800x600, {7} 1024x768, {8} 1280x1024
+# EGA/CGA   256 Cols:  {9} 320x200, {A} VGA: 16 Color 640x480.
+# {9} => VGA mode 0x13. {A} => VGA mode 0x12.
+
+[VIDEO] 0
+
+# Direct LFB write, paging (available VESA 2+ only)
+# Use predefined settings or probe video mode.
+# Probing enabled {1} no, {2} yes.
+
+[PROBE] 0
+
+# Hardware accelerated graphics
+# Vesa 2.0+ (only): MTRR graphics acceleration {1} yes, {2} no.
+
+[VACCEL] 0
+
+# Mouse at: {1} PS/2 (USB), {2} Com1, {3} Com2.
+
+[MOUSE] 0
+
+# Amount of RAM (MB) available on the system
+# {1} 32, {2} 64, {3} 128, {4} 256, {5} 512,{6} 1024, {7} 2048.
+
+[RAM] 0
+
+# Cached information from floppy or hard disk (boot device)
+# When floppy is selected, the entire disk is copied to RAM as a RAM_Disk (/RD)
+# Load disk image from: {1} floppy (default), {2} hd/msetup.exe (hdboot.txt), 
+# {3} use preloaded ram-image from kernel restart.
+
+[RSOURCE] 0
+
+
+
+
+

@@ -1,0 +1,149 @@
+# Desktop Panel & Menu setup file
+# You may edit this and add your own menus or menu entries
+# This is a standard test file. Lines like this are comments
+# MAINMENU is displayed first, others are displayed if referenced
+# in a menu.
+# Each menu entry is defined as:
+# Text, MENU or APP, path to icon, path to APP or menuname
+# Applications may reside on the harddisk, but you will need
+# to manually enable the harddisk before selecting from the menu
+
+[MAINMENU]
+# First pop-up menu
+SYSTEM    >, MENU,  /RD/1/psystem.bmp,  SUBMENU0
+CODING    >, MENU,  /RD/1/ark.bmp,      SUBMENU1
+INTERNET  >, MENU,  /RD/1/browser.bmp,  SUBMENU2
+AUDIO     >, MENU,  /RD/1/juk.bmp,      SUBMENU11
+MISC      >, MENU,  /RD/1/katomic.bmp,  SUBMENU9
+GRAPHICS  >, MENU,  /RD/1/graphic.bmp,  SUBMENU12
+DEMOS     >, MENU,  /RD/1/pgames.bmp,   SUBMENU5
+GAMES     >, MENU,  /RD/1/pgames.bmp,   SUBMENU3
+QUIT       , APP,   /RD/1/bug.bmp,      /RD/1/END
+
+[SUBMENU0]
+# System Utilities
+FILES,        APP,   /RD/1/icons.bmp,   /RD/1/SYSTREE
+PROCESSES,    APP,  /RD/1/icons.bmp,    /RD/1/CPU
+SETUP,        APP,   /RD/1/icons.BMP,   /RD/1/SETUP
+CACHE2FD,     APP,   /RD/1/icons.bmp,   /RD/1/CACHE2FD
+DEBUG,        APP,  /RD/1/icons.bmp,    /RD/1/BOARD
+PROTECTION,   APP,  /RD/1/icons.bmp,    /RD/1/TEST
+CPU USE,      APP,  /RD/1/icons.BMP,    /RD/1/SYSMETER
+
+[SUBMENU9]
+# Debugging tools
+MFAR,         APP,   /RD/1/icons.BMP,   /RD/1/MFAR
+XTREE,        APP,   /RD/1/icons.BMP,   /RD/1/SYSXTREE
+CALC,         APP,   /RD/1/icons.bmp,   /RD/1/CALC
+CPU SPEED,    APP,  /RD/1/icons.BMP,    /RD/1/CPUSPEED
+# MEMORY,       APP,  /RD/1/icons.bmp,    /RD/1/MEMUSE
+# CACHE2HD,     APP,   /RD/1/icons.bmp,   /RD/1/CACHE2HD
+# EDITOR II,    APP,   /RD/1/icons.BMP,   /RD/1/TINYPAD2
+# TRACE CALLS,  APP,  /RD/1/icons.BMP,  /RD/1/SYSTRACE
+SCANCODES,    APP,  /RD/1/icons.BMP,    /RD/1/SCANCODE
+CPUID,        APP,  /RD/1/icons.BMP,    /RD/1/CPUID814
+ARCHIVE,      APP,   /RD/1/icons.BMP,   /RD/1/MHC
+CLOCK,       APP,   /RD/1/icons.BMP,   /RD/1/ACLOCK
+#RCLOCK,       APP,   /RD/1/icons.BMP,   /RD/1/RCLOCK
+
+[SUBMENU10]
+#disk utilities
+RD->FLOPPY,    APP,  /RD/1/icons.bmp,  /RD/1/RD2FD
+RD->HD,        APP,  /RD/1/icons.bmp,  /RD/1/RD2HD
+FILE DELETE,   APP,  /RD/1/icons.BMP,  /RD/1/RDFDEL
+FILE COPY,     APP,  /RD/1/icons.BMP,  /RD/1/COPY2
+
+[SUBMENU11]
+# Audio Tools
+MIXER,          APP,    /RD/1/juk.bmp,       /RD/1/MIXER
+WAVE PLAYER,    APP,    /RD/1/juk.bmp,       /RD/1/SB
+AC97 PLAYER,    APP,    /RD/1/juk.bmp,       /RD/1/AC97
+CD PLAYER,      APP,    /RD/1/juk.bmp,       /RD/1/CDPLAY
+
+[SUBMENU12]
+# Graphics Tools
+ICONMNGR,  APP,  /RD/1/graphic.bmp,   /RD/1/ICONMNGR
+# ICONEDIT,  APP,  /RD/1/kview.bmp,   /RD/1/ICONEDIT
+PAINT,     APP,  /RD/1/graphic.bmp, /RD/1/PAINT
+MAGNIFY,   APP,  /RD/1/graphic.bmp,   /RD/1/MAGNIFY
+VSCREEN,   APP,  /RD/1/katomic.bmp,   /RD/1/VSCREEN
+BMPVIEW,   APP,  /RD/1/katomic.bmp, /RD/1/BMPVIEW
+JPEGVIEW,  APP,  /RD/1/katomic.bmp, /RD/1/JPEGVIEW
+
+[SUBMENU1]
+# Programming tools
+TEXT EDITOR,  APP,   /RD/1/icons.BMP,  /RD/1/TINYPAD
+FASM,         APP,   /RD/1/FIRE.BMP,   /RD/1/FASM
+EXAMPLE.ASM,  APP,   /RD/1/HD.BMP,     /RD/1/EXAMPLE
+E32-2.ASM,    APP,   /RD/1/HD.BMP,     /RD/1/E32-2
+THREAD.ASM,   APP,   /RD/1/HD.BMP,     /RD/1/THREAD
+RTDATA.ASM,   APP,   /RD/1/HD.BMP,     /RD/1/RTDATA
+
+[SUBMENU2]
+# Internet stuff
+TOOLS     >,  MENU,  /RD/1/icons.BMP,  SUBMENU6
+CLIENTS   >,  MENU,  /RD/1/icons.bmp,  SUBMENU7
+SERVERS   >,  MENU,  /RD/1/icons.bmp,  SUBMENU8
+
+[SUBMENU6]
+# Internet tools
+# INFORMATION,  APP,  /RD/1/icons.BMP,  /RD/1/STACKINF
+STACK,        APP,  /RD/1/katomic.BMP,  /RD/1/STACKCFG
+STATUS,       APP,  /RD/1/katomic.bmp,  /RD/1/ETHSTAT
+ARP STATUS,   APP,  /RD/1/katomic.bmp,  /RD/1/ARPSTAT
+
+[SUBMENU7]
+# internet clients
+CHESS,       APP,   /RD/1/icons.bmp,  /RD/1/CHESS
+IRC,         APP,   /RD/1/icons.bmp,  /RD/1/AIRC
+TFTP,        APP,   /RD/1/icons.bmp,  /RD/1/TFTPC
+NNTP,        APP,   /RD/1/icons.bmp,  /RD/1/NNTPC
+# POP,         APP,   /RD/1/icons.bmp,  /RD/1/POPC
+DNS,         APP,   /RD/1/icons.bmp,  /RD/1/DNSR
+DHCP,        APP,   /RD/1/icons.bmp,  /RD/1/DHCP
+PPP,         APP,  /RD/1/icons.bmp,   /RD/1/PPP
+TELNET,      APP,   /RD/1/icons.bmp,  /RD/1/TELNET
+TERMINAL,     APP,   /RD/1/icons.bmp,   /RD/1/TERMINAL
+
+[SUBMENU8]
+# internet servers
+# EMAIL,       APP,  /RD/1/icons.BMP,    /RD/1/SMTPS
+HTTP,        APP,  /RD/1/icons.bmp,    /RD/1/HTTPS
+MP3,         APP,  /RD/1/icons.BMP,    /RD/1/MP3S
+FTP,         APP,  /RD/1/icons.bmp,    /RD/1/FTPS
+
+[SUBMENU3]
+# Games
+3D MAZE,     APP,  /RD/1/pgames.bmp,  /RD/1/FREE3D04
+C4,          APP,  /RD/1/pgames.bmp,  /RD/1/C4
+# DEMOS     >, MENU, /RD/1/hdd.bmp,  SUBMENU5
+# DEMOS     >, MENU,  /RD/1/hdd.bmp,      SUBMENU5
+CHESS,       APP,  /RD/1/pgames.BMP,  /RD/1/CHESS
+HD        >, MENU, /RD/1/hdd.bmp,       SUBMENU4
+# BLOCKS,      APP,  /RD/1/pgames.bmp,  /RD/1/MBLOCKS
+FREECELL,    APP,  /RD/1/pgames.bmp,  /RD/1/FREECELL
+PHENIX,      APP,  /RD/1/pgames.bmp,  /RD/1/PHENIX7
+# MINESWEEP,   APP,  /RD/1/pgames.bmp,  /RD/1/MINE
+TETRIS,      APP,  /RD/1/pgames.bmp,  /RD/1/TETRIS
+
+[SUBMENU4]
+# HD Games
+DOSBOX,      APP,  /RD/1/pgames.bmp,   /HD/1/MENUETOS/DOSBOX/DOSBOX
+QUAKE,       APP,  /RD/1/pgames2.bmp,  /HD/1/MENUETOS/QUAKE/SDLQUAKE
+DOOM,        APP,  /RD/1/pgames2.bmp,  /HD/1/MENUETOS/DOOM/DOOM
+SCUMMVM,     APP,  /RD/1/pgames.bmp,   /HD/1/MENUETOS/SCUMMVM/SCUMMVM
+
+[SUBMENU5]
+# DEMOS - Various demonstration applications
+3D TEAPOT,    APP,  /RD/1/pgames2.bmp,     /RD/1/3DSTPOT
+SHAPES,       APP,  /RD/1/pgames2.bmp,     /RD/1/CROWNSCR
+COLOR REF,    APP,  /RD/1/pgames2.bmp,     /RD/1/COLORREF
+TUBE,         APP,  /RD/1/pgames2.bmp,     /RD/1/TUBE
+FIRE,         APP,  /RD/1/pgames2.bmp,     /RD/1/FIRE
+# TRANSP,       APP,  /RD/1/pgames2.bmp,     /RD/1/TRANSP
+EYES,         APP,  /RD/1/pgames2.bmp,     /RD/1/EYES
+FREEFORM,     APP,  /RD/1/pgames2.bmp,     /RD/1/COLORS
+
+# The next line delimits the end of the list of menus
+# and must always be here
+[END]

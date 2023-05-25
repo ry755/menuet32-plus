@@ -88,7 +88,7 @@ kernel_start:
 
                   jmp   start_of_code
 
-version           db    'Menuet32 v0.86                   ',13,10,13,10,0
+version           db    'Menuet32-Plus v0.1 (based on MenuetOS v0.86)',13,10,13,10,0
                   dd    endofcode-0x10000
 
                   db   'Boot02'

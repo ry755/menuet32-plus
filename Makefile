@@ -7,20 +7,31 @@ APPS := \
 	build/BOARD \
 	build/CACHE2FD \
 	build/CACHE2HD \
+	build/CALC \
+	build/COPY2 \
+	build/CPU \
+	build/CPUSPEED \
 	build/DESKTOP \
 	build/END \
 	build/ICON \
 	build/ICONMNGR \
 	build/JPEGVIEW \
 	build/LAUNCHER \
+	build/MEMUSE \
 	build/MPANEL \
 	build/MDM \
-	build/RD2FD \
-	build/RD2HD \
+	build/RCLOCK \
+	build/RDFDEL \
+	build/SB \
 	build/SETUP \
-	build/SPANEL \
+	build/SYSMETER \
 	build/SYSTREE \
-	build/TINYPAD
+	build/TELNET \
+	build/TERMINAL \
+	build/TETRIS \
+	build/TINYFRAC \
+	build/TINYPAD \
+	build/TUBE
 
 STATIC := $(wildcard static/*)
 

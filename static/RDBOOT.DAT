@@ -19,16 +19,14 @@
 
 # If you like the old background image, you can uncomment this line,
 # and comment out the JPEGVIEW one.
-#PIC4 BOOT 2000
+#PIC4 BOOT 1000
 
-JPEGVIEW BOOT 2000
+JPEGVIEW BOOT 1000
 
-#PANEL BOOT 2000
+ICONMNGR BOOT 1000
 
-ICONMNGR BOOT 2000
-
-MPANEL BOOT 2000
+MPANEL BOOT 1000
 
 # This line opens tinypad and loads this file.
 # Not very useful, but it demonstrates other parameter options
-#TINYPAD /RD/1/RDBOOT.DAT 2000
+#TINYPAD /RD/1/RDBOOT.DAT 1000

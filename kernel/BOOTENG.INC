@@ -72,7 +72,7 @@ novesa:
 
 vervesa:
 
-    db    "Display bios: Vesa x.x ",13,10,0
+    db    "Display BIOS: Vesa x.x ",13,10,0
 
 video_md:
 gr_mode:
@@ -97,13 +97,13 @@ mouse_md:
 askmouse:
 
     db    13,10,186," Mouse at:"
-    db    " [1] PS/2 (USB), [2] Com1, [3] Com2."
+    db    " [1] PS/2 (USB), [2] COM1, [3] COM2."
     db    " Select port [1-3] ? ",0
 
 accel_md:
 gr_acc:
 
-    db    13,10,186," Vesa 2.0+ : MTRR graphics acceleration "
+    db    13,10,186," Vesa 2.0+: MTRR graphics acceleration "
     db    "[1-yes/2-no] ? ",0
 
 gr_direct:
@@ -114,7 +114,7 @@ gr_direct:
 ram_szcd:
 mem_model:
 
-    db    13,10,186," RAM in MB's [1-32 / "
+    db    13,10,186," RAM in MBs [1-32 / "
     db    "2-64 / 3-128 / 4-256 /"
     db    " 5-512 / 6-1024 / 7-2048] ? ",0
 
@@ -195,7 +195,7 @@ keyinbs:
 
 diskload:
 
-    db    13,10,"º Updating floppy cache: 00 %",8,8,8,8,0
+    db    13,10,"ï¿½ Updating floppy cache: 00 %",8,8,8,8,0
 
 backspace:
 
@@ -213,4 +213,3 @@ boot_dev:
 
     db    0  ; 0=floppy, 1=hd
    
-

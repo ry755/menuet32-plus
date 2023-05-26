@@ -20,18 +20,22 @@ APPS := \
 	build/MEMUSE \
 	build/MPANEL \
 	build/MDM \
+	build/PAINT \
 	build/RCLOCK \
 	build/RDFDEL \
 	build/SB \
 	build/SETUP \
 	build/SYSMETER \
+	build/SYSTRACE \
 	build/SYSTREE \
 	build/TELNET \
 	build/TERMINAL \
 	build/TETRIS \
 	build/TINYFRAC \
 	build/TINYPAD \
-	build/TUBE
+	build/TRANSP \
+	build/TUBE \
+	build/VSCREEN
 
 STATIC := $(wildcard static/*)
 

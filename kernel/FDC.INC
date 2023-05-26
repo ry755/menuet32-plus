@@ -1,7 +1,7 @@
 ;### fdc.inc ###  Menuetos floppy stuff.
 ;Version 0.2: Write individual tracks. / Sync ramdisk <-> floppy
 ;Version 0.1: Write full ramdisk to floppy.
-;£loppyright Tolle.
+;ï¿½loppyright Tolle.
 
 ;depends on: 
 ;restorefatchain
@@ -19,7 +19,7 @@ fdcmem		dd 0x100000
 cpymem		dd 0x100000
 dmamem		dd 0x100000
 dmasize		db 0x0
-dmamode	db 0x0
+dmamode		db 0x0
 
 ;function pointers.
 fdc_irq_func	dd fdc_null
@@ -61,10 +61,10 @@ ret
 
 
 fdc_writeramdisk:			;mark all tracks as dirty.
-	mov edi,0xD201		
-	mov al,1			
-	mov ecx,160		
-	rep stosb	
+	mov edi,0xD201
+	mov al,1
+	mov ecx,160
+	rep stosb
 	jmp fdc_commitflush
 fdc_commitfile:			;flush dirty tracks to floppy
 	test [fdc_settings],1	;...but only if this is really wanted by the user.
@@ -119,8 +119,34 @@ fdc_commitramdisk2:
 	mov[head],0		;set variables.
 	mov[cylinder],0
 	mov [sector],1	
-        mov[cpymem],fat_base + 0x2400
+	mov[cpymem],fat_base + 0x2400
 	mov [fdc_pump_func],fdc_fullpump
+	call fdc_write		;fdc_write will continue interruptflow
+ret
+
+; re-read the ramdisk from the floppy disk
+fdc_overwriteramdisk:
+	mov edi,0xD201
+	mov al,1
+	mov ecx,160
+	rep stosb
+
+	mov [dmamode],0x46	;read from floppy to memory.
+	mov [dmasize],0x1	;read 512 bytes sectors.
+	mov [fdc_irq_func],fdc_overwriteramdisk1
+	call fdc_floppy_on	;start floppy A: moter starts interruptflow.
+	ret
+fdc_overwriteramdisk1:
+	mov [fdc_irq_func],fdc_recalibrate_result
+	mov [fdc_pump_func],fdc_overwriteramdisk2
+	call fdc_recalibrate	;retract the head to cylinder 0, sector 1
+	ret
+fdc_overwriteramdisk2:
+	mov [head],0		;set variables.
+	mov [cylinder],0
+	mov [sector],1
+	mov [cpymem],fat_base + 512
+	mov [fdc_pump_func],fdc_fullpump_read
 	call fdc_write		;fdc_write will continue interruptflow
 ret
 
@@ -157,6 +183,48 @@ fdc_fullpump:
 	mov bl,[eax]
 	cmp bl,1
 	jne fdc_fullpump
+	call fdc_write
+	.end:
+ret
+
+fdc_fullpump_read:
+	add [dmamem],512
+	add [sector],1
+	cmp [sector],19
+	jne .clusterwrite
+	sub [dmamem],9216
+	;mov eax,[fdcmem]
+	;mov ebx,[cpymem]
+	;mov ecx,9216
+	;call memmove
+	;add [cpymem],9216
+	cmp [head],0
+	je .nocylinderchange
+	add [cylinder],1
+	.nocylinderchange:
+	mov eax,[fdcmem]
+	mov ebx,[cpymem]
+	mov ecx,9216
+	call memmove
+	add [cpymem],9216
+	xor [head],1
+	cmp [cylinder],80
+	jne .noendofwrite
+	mov [fdc_irq_func],fdc_complete
+	call fdc_floppy_off
+	call fdc_init
+	jmp .end
+	.noendofwrite:
+	mov [sector],1
+	.clusterwrite:
+	xor eax,eax
+	mov al,[cylinder]
+	shl eax,1
+	add al,[head]
+	add eax,0xD201
+	mov bl,[eax]
+	cmp bl,1
+	jne fdc_fullpump_read
 	call fdc_write
 	.end:
 ret

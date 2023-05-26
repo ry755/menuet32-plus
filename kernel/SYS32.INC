@@ -3875,4 +3875,3 @@ build_scheduler:
         call   build_syscall_interrupt_table
 
         ret
-

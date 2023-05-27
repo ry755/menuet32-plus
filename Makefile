@@ -8,6 +8,7 @@ APPS := \
 	build/CACHE2FD \
 	build/CACHE2HD \
 	build/CALC \
+	build/CEXAMPLE \
 	build/COPY2 \
 	build/CPU \
 	build/CPUSPEED \
@@ -64,25 +65,13 @@ build/%: applications/%.ASM
 	mkdir -p build/
 	fasm $< $@
 
-#build/KERNEL.MNT: kernel/KERNEL.ASM $(wildcard kernel/*.INC)
-#	mkdir -p $(MOUNT)
-#	mkdir -p build/
-#	sudo mount -o loop -t vfat $(IMAGE) $(MOUNT)
-#	fasm kernel/KERNEL.ASM build/KERNEL.MNT
-#	sudo cp build/KERNEL.MNT $(MOUNT)
-#	sleep 0.2
-#	sudo umount $(MOUNT)
-#	rm -rf $(MOUNT)
-#
-#build/%: applications/%.ASM
-#	mkdir -p $(MOUNT)
-#	mkdir -p build/
-#	sudo mount -o loop -t vfat $(IMAGE) $(MOUNT)
-#	fasm $< $@
-#	sudo cp $@ $(MOUNT)
-#	sleep 0.2
-#	sudo umount $(MOUNT)
-#	rm -rf $(MOUNT)
+build/%: applications/%.c libmenuet/libmenuet.a
+	mkdir -p build/
+	smlrcc -I libmenuet/include -Wall -flat32 -origin 0 -o $@ libmenuet/libmenuet.a $<
+
+libmenuet/libmenuet.a:
+	cd libmenuet && make
 
 clean:
 	rm -rf build
+	cd libmenuet && make clean

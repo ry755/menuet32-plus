@@ -41,10 +41,10 @@ void main() {
 
 void RedrawWindow() {
     BeginRedraw();
-    DrawWindow(64, 64, 128, 128, 0xFFFFFF, "C TEST", NULL);
-    DisplayText(16, 38, 0x00000000, "Hello world!");
+    DrawWindow(64, 64, 128, 128, 0x00FFFFFF, "C TEST", NULL);
+    PutText(16, 38, 0x00000000, "Hello world!");
     DefineButton(16, 64, 64, 16, 2, 0x10000000, "click me!");
     if (button_clicked)
-        DisplayText(16, 96, 0x00000000, "Button clicked!");
+        PutText(16, 96, 0x00000000, "Button clicked!");
     EndRedraw();
 }

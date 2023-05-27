@@ -47,7 +47,7 @@ uint32_t FileSystem(file_block_t *file_block);
 // window
 void DrawWindow(uint16_t x_start, uint16_t y_start, uint16_t x_size, uint16_t y_size, uint32_t color, char *label, char *menu_struct);
 void PutPixel(uint32_t x, uint32_t y, uint32_t color);
-void DisplayText(uint16_t x, uint16_t y, uint32_t color, char *text);
+void PutText(uint16_t x, uint16_t y, uint32_t color, char *text);
 void PutImage(uint16_t x_start, uint16_t y_start, uint16_t x_size, uint16_t y_size, char *image);
 void BeginRedraw();
 void EndRedraw();

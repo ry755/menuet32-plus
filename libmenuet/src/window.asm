@@ -52,14 +52,14 @@ _PutPixel:
     leave
     ret
 
-; void DisplayText(
+; void PutText(
 ;    uint16_t x,
 ;    uint16_t y,
 ;    uint32_t color,
 ;    char *text
 ; );
-global _DisplayText
-_DisplayText:
+global _PutText
+_PutText:
     push ebp
     mov ebp, esp
     pushad

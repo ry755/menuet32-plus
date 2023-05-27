@@ -77,6 +77,33 @@ _DisplayText:
     leave
     ret
 
+; void PutImage(
+;    uint16_t x_start,
+;    uint16_t y_start,
+;    uint16_t x_size,
+;    uint16_t y_size,
+;    char *image,
+; );
+global _PutImage
+_PutImage:
+    push ebp
+    mov ebp, esp
+    pushad
+
+    mov eax, 7                 ; syscall 7
+    movzx edx, word [ebp + 8]  ; x_start
+    shl edx, 16
+    mov dx, word [ebp + 12]    ; y_start
+    movzx ecx, word [ebp + 16]  ; x_size
+    shl ecx, 16
+    mov cx, word [ebp + 20]    ; y_size
+    mov ebx, dword [ebp + 24]
+    int 0x40
+
+    popad
+    leave
+    ret
+
 ; void BeginRedraw();
 global _BeginRedraw
 _BeginRedraw:

@@ -5,6 +5,7 @@
     %include "application.asm"
     %include "button.asm"
     %include "event.asm"
+    %include "file.asm"
     %include "window.asm"
 
 return: dd 0x00000000

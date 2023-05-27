@@ -1,7 +1,7 @@
 # Menuet32-Plus
 
-**Menuet32-Plus** is a fork of the 32 bit variant of MenuetOS, which aims to fix bugs and add new features while retaining compatibility with
-existing MenuetOS applications.
+**Menuet32-Plus** is a fork of the 32 bit variant of [MenuetOS](http://www.menuetos.net/),
+which aims to fix bugs and add new features while retaining compatibility with existing MenuetOS applications.
 
 # Screenshot
 
@@ -12,6 +12,7 @@ existing MenuetOS applications.
  - [x] Build using a Makefile
  - [x] Fix `/HD` access on startup
  - [x] Minor tweaks to fix building with modern versions of FASM
+ - [x] Small non-standard C library ([libmenuet](libmenuet))
  - [ ] Modify the ramdisk driver to support accessing files within subdirectories
  - [ ] Format the codebase to fit a consistent style
 

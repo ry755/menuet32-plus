@@ -23,6 +23,7 @@ typedef int bool;
 void EndApplication();
 
 // button
+void DefineButton(uint16_t x_start, uint16_t y_start, uint16_t x_size, uint16_t y_size, uint32_t id, uint32_t color, char *label);
 uint32_t GetButtonID();
 
 // event

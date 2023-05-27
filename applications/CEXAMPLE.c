@@ -1,6 +1,7 @@
 #include "libmenuet.h"
-
 #include <stdint.h>
+
+bool button_clicked = false;
 
 void RedrawWindow();
 
@@ -19,8 +20,20 @@ void main() {
             case 3: {
                 // button event
                 uint32_t button = GetButtonID() >> 8;
-                if (button == 1)
-                    EndApplication();
+                switch (button) {
+                    case 1: {
+                        // button 1 is the window's close button
+                        EndApplication();
+                        break;
+                    }
+
+                    case 2: {
+                        // button 2 is our "click me!" button
+                        button_clicked = true;
+                        RedrawWindow();
+                        break;
+                    }
+                }
             }
         }
     }
@@ -29,6 +42,9 @@ void main() {
 void RedrawWindow() {
     BeginRedraw();
     DrawWindow(64, 64, 128, 128, 0xFFFFFF, "C TEST", NULL);
-    DisplayText(32, 32, 0x10000000, "hi");
+    DisplayText(16, 38, 0x00000000, "Hello world!");
+    DefineButton(16, 64, 64, 16, 2, 0x10000000, "click me!");
+    if (button_clicked)
+        DisplayText(16, 96, 0x00000000, "Button clicked!");
     EndRedraw();
 }

@@ -109,47 +109,52 @@ fdc_commitramdisk:
 
     mov  [dmamode], 0x4A                     ; read from memory to floppy.
     mov  [dmasize], 0x1                      ; read 512 bytes sectors.
-    mov  [fdc_irq_func], fdc_commitramdisk1
+    mov  [fdc_irq_func], .1
     call fdc_floppy_on                       ; start floppy A: moter starts interruptflow.
     ret
-fdc_commitramdisk1:
+.1:
     mov  [fdc_irq_func], fdc_recalibrate_result
-    mov  [fdc_pump_func], fdc_commitramdisk2
+    mov  [fdc_pump_func], .2
     call fdc_recalibrate                     ; retract the head to cylinder 0, sector 1
     ret
-fdc_commitramdisk2:
-    mov[head],0                              ; set variables.
-    mov[cylinder],0
+.2:
+    mov  [head], 0                           ; set variables.
+    mov  [cylinder], 0
     mov  [sector], 1
-    mov[cpymem],fat_base + 0x2400
+    mov  [cpymem],fat_base + 0x2400
     mov  [fdc_pump_func], fdc_fullpump_write
     call fdc_write                           ; fdc_write will continue interruptflow
     ret
 
 ; re-read the ramdisk from the floppy disk
 fdc_overwriteramdisk:
-    mov edi, 0xD201
-    mov al, 1
-    mov ecx, 160
-    rep stosb                               ; mark all tracks as dirty.
+    cmp [fdc_callspending], 5
+    je  .end
+    inc [fdc_callspending]
+
+    mov  edi, 0xD201
+    mov  al, 1
+    mov  ecx, 160
+    rep  stosb                              ; mark all tracks as dirty.
 
     mov  [dmamode], 0x46                    ; read from floppy to memory.
     mov  [dmasize], 0x1                     ; read 512 bytes sectors.
-    mov  [fdc_irq_func], fdc_overwriteramdisk1
+    mov  [fdc_irq_func], .1
     call fdc_floppy_on                      ; start floppy A: moter starts interruptflow.
     ret
-fdc_overwriteramdisk1:
+.1:
     mov  [fdc_irq_func], fdc_recalibrate_result
-    mov  [fdc_pump_func], fdc_overwriteramdisk2
+    mov  [fdc_pump_func], .2
     call fdc_recalibrate                    ; retract the head to cylinder 0, sector 1
     ret
-fdc_overwriteramdisk2:
+.2:
     mov  [head], 0                          ; set variables.
     mov  [cylinder], 0
     mov  [sector], 1
     mov  [cpymem], fat_base
     mov  [fdc_pump_func], fdc_fullpump_read
-    call fdc_write                          ; fdc_write will continue interruptflow
+    call fdc_read                           ; fdc_read will continue interruptflow
+.end:
     ret
 
 fdc_fullpump_write:

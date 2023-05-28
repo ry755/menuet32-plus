@@ -23,10 +23,10 @@ _refoper        dd      0
 _skinoper       dd      -58
 _skinoperw      dd      58
 
-_buttonCx       dd      5  
-_buttonCy       dd      5   
-_buttonCw       dd      11   
-_buttonCh       dd      11   
+_buttonCx       dd      5
+_buttonCy       dd      5
+_buttonCw       dd      11
+_buttonCh       dd      11
 
 _buttonMx       dd      24
 _buttonMy       dd      2
@@ -40,7 +40,7 @@ _buttonPh       dd      18
 
 
 defbuttoncolor    dd   0x465670  ; 364660 ; 365260
-defbuttoncolor2   dd   0xc8c8c8  ; c0c0c0 
+defbuttoncolor2   dd   0xc8c8c8  ; c0c0c0
 
 _colorframe     dd      0x33465f ; 23364F ; 00365260
 _colorborder    dd      0x0
@@ -64,6 +64,3 @@ v_skinbasew      dd      10
 
 v_skinoper       dd      -58
 v_skinoperw      dd      58
-
-
-

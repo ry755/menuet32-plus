@@ -1,5 +1,5 @@
 ;
-;    FILE COPIER
+;    FILE DELETER
 ;
 ;    Compile with FASM for Menuet
 ;
@@ -231,7 +231,3 @@ labelt:
 labellen:
 
 I_END:
-
-
-
-

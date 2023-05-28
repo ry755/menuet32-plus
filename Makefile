@@ -8,6 +8,7 @@ APPS := \
 	build/CACHE2FD \
 	build/CACHE2HD \
 	build/CALC \
+	build/CEXAMPLE \
 	build/COPY2 \
 	build/CPU \
 	build/CPUSPEED \
@@ -20,18 +21,22 @@ APPS := \
 	build/MEMUSE \
 	build/MPANEL \
 	build/MDM \
+	build/PAINT \
 	build/RCLOCK \
 	build/RDFDEL \
 	build/SB \
 	build/SETUP \
 	build/SYSMETER \
+	build/SYSTRACE \
 	build/SYSTREE \
 	build/TELNET \
 	build/TERMINAL \
 	build/TETRIS \
 	build/TINYFRAC \
 	build/TINYPAD \
-	build/TUBE
+	build/TRANSP \
+	build/TUBE \
+	build/VSCREEN
 
 STATIC := $(wildcard static/*)
 
@@ -60,25 +65,16 @@ build/%: applications/%.ASM
 	mkdir -p build/
 	fasm $< $@
 
-#build/KERNEL.MNT: kernel/KERNEL.ASM $(wildcard kernel/*.INC)
-#	mkdir -p $(MOUNT)
-#	mkdir -p build/
-#	sudo mount -o loop -t vfat $(IMAGE) $(MOUNT)
-#	fasm kernel/KERNEL.ASM build/KERNEL.MNT
-#	sudo cp build/KERNEL.MNT $(MOUNT)
-#	sleep 0.2
-#	sudo umount $(MOUNT)
-#	rm -rf $(MOUNT)
-#
-#build/%: applications/%.ASM
-#	mkdir -p $(MOUNT)
-#	mkdir -p build/
-#	sudo mount -o loop -t vfat $(IMAGE) $(MOUNT)
-#	fasm $< $@
-#	sudo cp $@ $(MOUNT)
-#	sleep 0.2
-#	sudo umount $(MOUNT)
-#	rm -rf $(MOUNT)
+build/%: applications/%.c libmenuet/libmenuet.a
+	mkdir -p build/
+	smlrcc -I libmenuet/include -Wall -flat32 -origin 0 -o $@ libmenuet/libmenuet.a $<
+
+libmenuet/libmenuet.a:
+	cd libmenuet && make
+
+qemu: $(IMAGE)
+	qemu-system-i386 -fda $(IMAGE) -hda fat:rw:build/ -boot order=a
 
 clean:
 	rm -rf build
+	cd libmenuet && make clean

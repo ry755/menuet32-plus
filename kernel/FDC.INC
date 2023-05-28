@@ -118,9 +118,9 @@ fdc_commitramdisk1:
 fdc_commitramdisk2:
 	mov[head],0		;set variables.
 	mov[cylinder],0
-	mov [sector],1	
+	mov [sector],1
 	mov[cpymem],fat_base + 0x2400
-	mov [fdc_pump_func],fdc_fullpump
+	mov [fdc_pump_func],fdc_fullpump_write
 	call fdc_write		;fdc_write will continue interruptflow
 ret
 
@@ -145,12 +145,12 @@ fdc_overwriteramdisk2:
 	mov [head],0		;set variables.
 	mov [cylinder],0
 	mov [sector],1
-	mov [cpymem],fat_base + 512
+	mov [cpymem],fat_base
 	mov [fdc_pump_func],fdc_fullpump_read
 	call fdc_write		;fdc_write will continue interruptflow
 ret
 
-fdc_fullpump:
+fdc_fullpump_write:
 	add [dmamem],512
 	add [sector],1
 	cmp [sector],19
@@ -168,7 +168,7 @@ fdc_fullpump:
 	xor [head],1
 	cmp [cylinder],80
 	jne .noendofwrite
-	mov[fdc_irq_func],fdc_complete
+	mov[fdc_irq_func],fdc_complete_write
 	call fdc_floppy_off
 	call fdc_init
 	jmp .end
@@ -182,7 +182,7 @@ fdc_fullpump:
 	add eax,0xD201
 	mov bl,[eax]
 	cmp bl,1
-	jne fdc_fullpump
+	jne fdc_fullpump_write
 	call fdc_write
 	.end:
 ret
@@ -210,7 +210,7 @@ fdc_fullpump_read:
 	xor [head],1
 	cmp [cylinder],80
 	jne .noendofwrite
-	mov [fdc_irq_func],fdc_complete
+	mov [fdc_irq_func],fdc_complete_read
 	call fdc_floppy_off
 	call fdc_init
 	jmp .end
@@ -225,16 +225,21 @@ fdc_fullpump_read:
 	mov bl,[eax]
 	cmp bl,1
 	jne fdc_fullpump_read
-	call fdc_write
+	call fdc_read
 	.end:
 ret
 
 fdc_write:
 	call fdc_program_dma
-	call fdc_seek
+	call fdc_seek_write
 ret
 
-fdc_seek:
+fdc_read:
+	call fdc_program_dma
+	call fdc_seek_read
+ret
+
+fdc_seek_write:
 	mov al, 0x0f
 	call fdc_write_reg
 	mov al,[head]
@@ -242,26 +247,48 @@ fdc_seek:
 	call fdc_write_reg
 	mov al,[cylinder]
 	call fdc_write_reg
-	mov [fdc_irq_func],fdc_seek_result
+	mov [fdc_irq_func],fdc_seek_write_result
 ret
 
-fdc_seek_result:
+fdc_seek_read:
+	mov al, 0x0f
+	call fdc_write_reg
+	mov al,[head]
+	shl al,2
+	call fdc_write_reg
+	mov al,[cylinder]
+	call fdc_write_reg
+	mov [fdc_irq_func],fdc_seek_read_result
+ret
+
+fdc_seek_write_result:
 	call fdc_sensei
 	cmp al,[cylinder]
 	je .succes
-	call fdc_seek
+	call fdc_seek_write
 	jmp .end
 	.succes:
 	call fdc_write_sector
 	.end:
 ret
 
+fdc_seek_read_result:
+	call fdc_sensei
+	cmp al,[cylinder]
+	je .succes
+	call fdc_seek_read
+	jmp .end
+	.succes:
+	call fdc_read_sector
+	.end:
+ret
+
 fdc_write_sector:
 	mov al,0x45		;write sector command
-fdc_commandphase:
+fdc_commandphase_write:
 	call fdc_write_reg
-	mov al,[head]		
-	shl al,2	
+	mov al,[head]
+	shl al,2
 	call fdc_write_reg
 	mov al,[cylinder]
 	call fdc_write_reg
@@ -273,14 +300,38 @@ fdc_commandphase:
 	call fdc_write_reg
 	mov al,18			;last sector on track.
 	call fdc_write_reg
-	mov al,27			;length of GAP3 
+	mov al,27			;length of GAP3
 	call fdc_write_reg
 	mov al,0xFF		;data length, ignored.
 	call fdc_write_reg
-	mov [fdc_irq_func],fdc_resultphase
+	mov [fdc_irq_func],fdc_resultphase_write
 ret
 
-fdc_resultphase:
+fdc_read_sector:
+	mov al,0x46		;read sector command
+fdc_commandphase_read:
+	call fdc_write_reg
+	mov al,[head]
+	shl al,2
+	call fdc_write_reg
+	mov al,[cylinder]
+	call fdc_write_reg
+	mov al,[head]
+	call fdc_write_reg
+	mov al,[sector]
+	call fdc_write_reg
+	mov al,2			;Sector size (2 ~> 512 bytes)
+	call fdc_write_reg
+	mov al,18			;last sector on track.
+	call fdc_write_reg
+	mov al,27			;length of GAP3
+	call fdc_write_reg
+	mov al,0xFF		;data length, ignored.
+	call fdc_write_reg
+	mov [fdc_irq_func],fdc_resultphase_read
+ret
+
+fdc_resultphase_write:
 	call fdc_read_reg
 	mov [fdc_st0],al
 	mov cx,6
@@ -290,16 +341,33 @@ fdc_resultphase:
 	and [fdc_st0],11000000b
 	cmp [fdc_st0],byte 0
 	jz .succes
-	call fdc_seek
+	call fdc_seek_write
 	jmp .end
 	.succes:
 	call [fdc_pump_func]
 	.end:
 ret
 
-fdc_sensei:	
+fdc_resultphase_read:
+	call fdc_read_reg
+	mov [fdc_st0],al
+	mov cx,6
+	.readresult:
+	call fdc_read_reg
+	loop .readresult
+	and [fdc_st0],11000000b
+	cmp [fdc_st0],byte 0
+	jz .succes
+	call fdc_seek_read
+	jmp .end
+	.succes:
+	call [fdc_pump_func]
+	.end:
+ret
+
+fdc_sensei:
 	mov al,0x08		;get interrupt status command
-	call fdc_write_reg		
+	call fdc_write_reg
 	call fdc_read_reg		;get result in al;
 	and al,0x80
 	cmp al,0x80
@@ -307,16 +375,16 @@ fdc_sensei:
 	call fdc_read_reg
 ret
 
-fdc_program_dma:	
+fdc_program_dma:
 	mov al,0
 	out 0x0c,al	; reset the flip-flop to a known state.
-	mov al,6		; mask channel 2 so we can reprogram it. 
+	mov al,6		; mask channel 2 so we can reprogram it.
 	out 0x0a,al
 	mov al,[dmamode]	; 0x46 -> Read from floppy - 0x4A Write to floppy
-	out 0x0b,al	
+	out 0x0b,al
 	mov al,0
 	out 0x0c,al	; reset the flip-flop to a known state.
-	mov eax,[dmamem]	
+	mov eax,[dmamem]
 	out 0x04,al	; set the channel 2 starting address to 0
 	shr eax,8
 	out 0x04,al
@@ -324,9 +392,9 @@ fdc_program_dma:
 	out 0x81,al
 	mov al,0
 	out 0x0c, al	; reset flip-flop
- 	mov al, 0xff	;set count (actual size -1)
-    	out 0x5, al
-    	mov al, [dmasize]	;(0x1ff = 511 / 0x23ff =9215)
+	mov al, 0xff	;set count (actual size -1)
+	out 0x5, al
+	mov al, [dmasize]	;(0x1ff = 511 / 0x23ff =9215)
 	out 0x5,al
 	mov al,2
 	out 0xa,al
@@ -372,8 +440,8 @@ fdc_read_reg:
 	and al,0xc0
 	cmp al,0xc0
 	jne status_check
-	mov dx, 0x3F5 
-	in al, dx 
+	mov dx, 0x3F5
+	in al, dx
 ret
 
 fdc_write_reg:
@@ -391,17 +459,17 @@ ret
 
 fdc_floppy_off:
 	mov al,0x0
-	mov dx,0x3f2             
+	mov dx,0x3f2
 	out dx,al
 ret
 
 fdc_floppy_on:
 	mov al,0x1C
-	mov dx,0x3f2             
+	mov dx,0x3f2
 	out dx,al
 ret
 
-fdc_complete:
+fdc_complete_write:
 	mov eax,0xD000
 	mov ebx,0x100000
 	mov ecx,512
@@ -409,12 +477,23 @@ fdc_complete:
 
 	mov [fdc_irq_func],fdc_null
 	mov [fdc_mutex],0
-	dec[fdc_callspending]
+	dec [fdc_callspending]
 	cmp [fdc_callspending],0
 	je .realyend
 	mov [fdc_mutex],1
 	call fdc_commitramdisk
-	.realyend:	
+	.realyend:
+ret
+
+fdc_complete_read:
+	mov [fdc_irq_func],fdc_null
+	mov [fdc_mutex],0
+	dec [fdc_callspending]
+	cmp [fdc_callspending],0
+	je .realyend
+	mov [fdc_mutex],1
+	call fdc_overwriteramdisk
+	.realyend:
 ret
 
 fdc_irq:

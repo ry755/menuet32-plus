@@ -72,6 +72,9 @@ build/%: applications/%.c libmenuet/libmenuet.a
 libmenuet/libmenuet.a:
 	cd libmenuet && make
 
+qemu: $(IMAGE)
+	qemu-system-i386 -fda $(IMAGE) -hda fat:rw:build/ -boot order=a
+
 clean:
 	rm -rf build
 	cd libmenuet && make clean

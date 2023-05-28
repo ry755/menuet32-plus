@@ -3078,8 +3078,12 @@ sys_cachetodiskette:
     call fdc_get
     mov    [esp+36],ecx
     ret
-   no_get_fdc:
-                                popa
+  no_get_fdc:
+    cmp  eax,5
+    jne  no_overwrite
+    call fdc_overwriteramdisk
+  no_overwrite:
+    popa
     ret
 
 

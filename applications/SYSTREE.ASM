@@ -65,6 +65,11 @@ button:  ; button
 
 no_menu_quit:
     ; Other menu selections
+
+    ; Menu copy
+    cmp eax, 502
+    je create_copy_thread
+
     cmp eax, 500
     jb  no_menu
     cmp eax, 520
@@ -915,20 +920,100 @@ la6:
     sub [loclen], dword 12
     jmp read_directory
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;
+;   COPY THREAD
+;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+create_copy_thread:
+    ; if there's already a copy thread running, bail out
+    cmp byte [copy_thread_running], 0
+    jne still
+    mov byte [copy_thread_running], 1
+
+    ; create the thread
+    mov eax, 51
+    mov ebx, 1
+    mov ecx, copy_thread_entry
+    mov edx, 0x6f000
+    int 0x40
+
+    jmp still
+
+copy_thread_entry:
+    call copy_draw_window
+
+copy_still:
+    ; wait for event
+    mov eax, 10
+    int 0x40
+
+    ; redraw event
+    cmp eax, 1
+    je .redraw
+
+    ; button event
+    cmp eax, 3
+    je .button
+
+    jmp copy_still
+.redraw:
+    call copy_draw_window
+    jmp copy_still
+.button:
+    ; get button ID
+    mov eax, 17
+    int 0x40
+    shr eax, 8
+
+    ; close button?
+    cmp eax, 1
+    je .close
+
+    jmp copy_still
+.close:
+    mov byte [copy_thread_running], 0
+    mov eax, -1
+    int 0x40
+    jmp copy_still
+
+copy_draw_window:
+    mov eax, 12
+    mov ebx, 1
+    int 0x40
+
+    mov eax, 0
+    mov ebx, 128*65536+256
+    mov ecx, 128*65536+128
+    mov edx, 0x04ffffff
+    mov esi, copy_window_label
+    mov edi, 0
+    int 0x40
+
+    mov eax, 12
+    mov ebx, 2
+    int 0x40
+
+    ret
+
 ; DATA AREA
+copy_thread_running db 0
+
 dirlen  dd 0x1
 b_color dd 0x6677cc
 editor  db 'TINYPAD    '
 param   db '           ', 0
 
 text      db '/                       '
-up        db   0x18
-down      db   0x19
-xx        db   'x'
-loclen    dd  0
-readblock dd  1
+up        db 0x18
+down      db 0x19
+xx        db 'x'
+loclen    dd 0
+readblock dd 1
 
 window_label db 'FILE BROWSER', 0
+copy_window_label db 'COPY FILE', 0
 
 root db 'ROOTDIR     '
 
@@ -977,7 +1062,7 @@ menu_struct:
     dq 0
     dq 500
     db 0, 'FILE', 0
-    db 1, 'Open ..', 0
+    db 1, 'Copy', 0
     db 1, '-', 0
     db 1, 'Quit', 0
     db 255

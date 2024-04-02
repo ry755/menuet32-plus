@@ -1,5 +1,6 @@
 IMAGE := m32-plus.img
-MOUNT := tmp-mount
+ASM := fasm
+ME := $(shell id -run)
 
 APPS := \
 	build/AIRC \
@@ -44,26 +45,22 @@ all: $(IMAGE)
 
 build/BOOTLDR.BIN: bootloader/BOOTMOSF.ASM
 	mkdir -p build/
-	fasm $< $@
+	$(ASM) $< $@
 
 $(IMAGE): build/BOOTLDR.BIN build/KERNEL.MNT $(APPS) $(STATIC)
 	rm -f $(IMAGE)
-	mkdosfs -C $(IMAGE) 1440
+	sudo mkdosfs -C $(IMAGE) 1440
+	sudo chown $(ME):$(ME) $(IMAGE)
 	dd status=noxfer conv=notrunc if=build/BOOTLDR.BIN of=$(IMAGE)
-	mkdir -p $(MOUNT)
-	sudo mount -o loop -t vfat $(IMAGE) $(MOUNT)
-	sudo cp $^ $(MOUNT)
-	sleep 0.2
-	sudo umount $(MOUNT)
-	rm -rf $(MOUNT)
+	mcopy -v -i $(IMAGE) $^ ::
 
 build/KERNEL.MNT: kernel/KERNEL.ASM $(wildcard kernel/*.INC)
 	mkdir -p build/
-	fasm kernel/KERNEL.ASM build/KERNEL.MNT
+	$(ASM) kernel/KERNEL.ASM build/KERNEL.MNT
 
 build/%: applications/%.ASM
 	mkdir -p build/
-	fasm $< $@
+	$(ASM) $< $@
 
 build/%: applications/%.c libmenuet/libmenuet.a
 	mkdir -p build/

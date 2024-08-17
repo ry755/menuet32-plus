@@ -127,7 +127,7 @@ bdev:
 
     db    13,10,186
     db    " Load disk image from [1-floppy (default) / "
-    db    "2-hd/msetup.exe (hdboot.txt)] ? ",0
+    db    "2-hd/menuet.img] ? ",0
     db    13,10,186,"                    "
     db    "3-use preloaded ram-image from kernel restart] ? ",0
 
@@ -195,7 +195,7 @@ keyinbs:
 
 diskload:
 
-    db    13,10,"� Updating floppy cache: 00 %",8,8,8,8,0
+    db    13,10,186," Updating floppy cache: 00 %",8,8,8,8,0
 
 backspace:
 

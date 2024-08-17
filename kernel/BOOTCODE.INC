@@ -1357,6 +1357,11 @@ end if ;; boot_media=0
   pre_device2:
     dec   al			; floppy = 0, HDD = 1, Prior RAM image = 2
     mov   [boot_dev],al
+    push  es
+    push  word 0
+    pop   es
+    mov   [es:0x90F0],al
+    pop   es
     mov   si,linef
     call  printplain
 

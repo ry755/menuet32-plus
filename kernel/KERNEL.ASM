@@ -222,9 +222,6 @@ boot_tasking      db   'All set - press ESC to start',0
 boot_y dd 10
 
 boot_log:
-
-         ret
-
          pusha
 
          mov   edx,esi
@@ -266,7 +263,7 @@ cpuid_3    dd  0,0,0,0
 firstapp   db  'L','A','U','N','C','H','E','R',' ',' ',' '
 char       db  'C','H','A','R',' ',' ',' ',' ','M','T',' '
 char2      db  'C','H','A','R','2',' ',' ',' ','M','T',' '
-hdsysimage db  'M','S','E','T','U','P',' ',' ','E','X','E'
+hdsysimage db  'M','E','N','U','E','T',' ',' ','I','M','G'
 bootpath   db  0
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -301,7 +298,9 @@ B32:
         rep   stosd
 
 ; SAVE REAL MODE VARIABLES
-
+        
+        mov   al, [0x2f0000+0x90F0]
+        mov   byte [saved_boot_dev], al
         movzx eax,byte [0x2f0000+0x9010]  ; mouse port
         mov   [0xF604],al
         mov   al,[0x2f0000+0x9000]        ; bpp
@@ -391,9 +390,10 @@ B32:
         mov   [hdpos],1           ;
         mov   [hdid],0x0          ;
         mov   [0xfe10],dword 0    ; entries in hd cache
+        mov   [lba_read_enabled],dword 1
         call  set_FAT32_variables
 
-        cmp   [boot_dev],byte 1
+        cmp   [saved_boot_dev], byte 1
         jne   no_sys_on_hd
 
         ;mov   [fat32part],1       ; Partition
@@ -403,7 +403,7 @@ B32:
         ;mov   [0xfe10],dword 0    ; entries in hd cache
         ;call  set_FAT32_variables
 
-        mov   esi,40
+        mov   esi,0
         mov   ecx,fat_base ; 0x100000
       hdbootl1:
         mov   eax,hdsysimage
@@ -419,7 +419,7 @@ B32:
 
         add   ecx,512*18*2*5
         add   esi,18*2*5
-        cmp   esi,1474560/512+41-1
+        cmp   esi,1474560/512
         jb    hdbootl1
       no_sys_on_hd:
 
@@ -9351,5 +9351,7 @@ syslang    dd 0x1
 
 buttontype         dd 0x0
 windowtypechanged  dd 0x0
+
+saved_boot_dev db 0x0
 
 endofcode:  ; -VT

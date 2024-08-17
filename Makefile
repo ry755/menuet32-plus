@@ -15,11 +15,15 @@ APPS := \
 	build/CPUSPEED \
 	build/DESKTOP \
 	build/END \
+	build/EYES \
+	build/HTTPC \
+	build/HTTPS \
 	build/ICON \
 	build/ICONMNGR \
 	build/JPEGVIEW \
 	build/LAUNCHER \
 	build/MEMUSE \
+	build/MHC \
 	build/MPANEL \
 	build/MDM \
 	build/PAINT \
@@ -27,6 +31,8 @@ APPS := \
 	build/RDFDEL \
 	build/SB \
 	build/SETUP \
+	build/STACKCFG \
+	build/STACKINF \
 	build/SYSMETER \
 	build/SYSTRACE \
 	build/SYSTREE \
